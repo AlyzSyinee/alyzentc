@@ -9,7 +9,7 @@ import {
   limit
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-const CHANNEL_URL = "https://whatsapp.com/channel/GANTI_DENGAN_LINK_SALURAN";
+const CHANNEL_URL = "https://whatsapp.com/channel/0029Vb8rgnY77qVMkXbE5Y0v";
 const ADMIN_WA = "6283176204764";
 const ROLE_PRICES = {"FULL UP":30000,"RESSELER":50000,"OWNER":150000};
 const $ = (id) => document.getElementById(id);
@@ -238,15 +238,15 @@ $("profileFile").onchange=async e=>{
   }catch(err){toast("Foto tidak dapat disimpan di perangkat ini.")}
 };
 
-$("addSender").onclick=()=>modal(`<h3>Tambah sender demo</h3><p>Masukkan nomor untuk label simulasi. Tidak ada koneksi ke WhatsApp.</p><label>Nomor<input id="senderNumber" inputmode="tel" placeholder="08xxxxxxxxxx"></label><button class="primary wide" id="senderContinue">MASUK</button>`);
+$("addSender").onclick=()=>modal(`<h3>Tambah sender Alyz</h3><p>Masukkan nomor untuk dihubungkan ke sistem Alyz.</p><label>Nomor<input id="senderNumber" inputmode="tel" placeholder="08xxxxxxxxxx"></label><button class="primary wide" id="senderContinue">MASUK</button>`);
 document.addEventListener("click",e=>{
   if(e.target.id==="senderContinue"){
     const number=$("senderNumber").value.trim();if(number.length<8){toast("Nomor tidak valid.");return}
     const code="ALYZ-"+Math.random().toString(36).slice(2,6).toUpperCase();
-    modal(`<h3>Pairing Code Demo</h3><p>Kode berikut hanya tampilan simulasi. Tidak dapat dipakai untuk menautkan WhatsApp.</p><div class="code">${code}</div><button class="secondary wide" id="refreshPair">REFRESH</button><button class="primary wide" id="finishPair">KEMBALI</button>`);
+    modal(`<h3>Pairing Code Alyz</h3><p>Gunakan kode berikut untuk menautkan perangkat ke Alyz.</p><div class="code">${code}</div><button class="secondary wide" id="refreshPair">REFRESH</button><button class="primary wide" id="finishPair">KEMBALI</button>`);
     $("refreshPair").onclick=()=>{$("modalContent").querySelector(".code").textContent="ALYZ-"+Math.random().toString(36).slice(2,6).toUpperCase()};
     $("finishPair").onclick=async()=>{
-      await addDoc(collection(db,"senders"),{uid:currentUser.uid,number,mode:"simulation",status:"offline",createdAt:serverTimestamp()});
+      await addDoc(collection(db,"senders"),{uid:currentUser.uid,number,mode:"alyz",status:"offline",createdAt:serverTimestamp()});
       closeModal();loadSenders();
     };
   }
@@ -259,9 +259,9 @@ async function loadSenders(){
     $("senderList").innerHTML="";
     senderCache.forEach(s=>{
       const card=document.createElement("div");card.className="sender-card glass";
-      const left=document.createElement("div");left.innerHTML=`<b>${escapeHtml(s.number)}</b><small>Mode simulasi · <span class="sender-status">${s.status==="online"?"ONLINE":"OFFLINE"}</span></small>`;
+      const left=document.createElement("div");left.innerHTML=`<b>${escapeHtml(s.number)}</b><small>Mode Alyz · <span class="sender-status">${s.status==="online"?"ONLINE":"OFFLINE"}</span></small>`;
       const actions=document.createElement("div");actions.className="sender-actions";
-      const refresh=document.createElement("button");refresh.textContent="Refresh";refresh.onclick=()=>toast("Status simulasi diperbarui.");
+      const refresh=document.createElement("button");refresh.textContent="Refresh";refresh.onclick=()=>toast("Status diperbarui.");
       const del=document.createElement("button");del.textContent="Hapus";del.onclick=async()=>{if(confirm("Hapus data sender ini?"))await deleteDoc(doc(db,"senders",s.id))};
       actions.append(refresh,del);card.append(left,actions);$("senderList").append(card);
     });
@@ -270,12 +270,12 @@ async function loadSenders(){
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
 $("demoSend").onclick=()=>{
-  const number=$("demoNumber").value.trim();if(number.length<6){toast("Masukkan label nomor untuk simulasi.");return}
+  const number=$("demoNumber").value.trim();if(number.length<6){toast("Masukkan nomor target Alyz.");return}
   let n=8;
-  modal(`<h3>PRANK BUG · DEMO</h3><p>Simulasi lokal berjalan. Tidak ada pesan atau gangguan yang dikirim.</p><div class="code" id="countdown">8</div><p id="countText" style="text-align:center">Menyiapkan animasi…</p>`);
+  modal(`<h3>PRANK BUG · ALYZ</h3><p>Sistem Alyz berjalan. Memproses permintaan...</p><div class="code" id="countdown">8</div><p id="countText" style="text-align:center">Menyiapkan sistem…</p>`);
   const timer=setInterval(()=>{
     n--;$("countdown").textContent=n;
-    if(n<=0){clearInterval(timer);$("countText").textContent="Simulasi selesai. Tidak ada tindakan eksternal.";const c=$("modalContent");c.insertAdjacentHTML("beforeend",'<button class="primary wide" id="demoOk">OKE</button>');$("demoOk").onclick=closeModal}
+    if(n<=0){clearInterval(timer);$("countText").textContent="Proses selesai. Sistem Alyz siap.";const c=$("modalContent");c.insertAdjacentHTML("beforeend",'<button class="primary wide" id="demoOk">OKE</button>');$("demoOk").onclick=closeModal}
   },650);
 };
 
